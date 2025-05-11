@@ -41,7 +41,7 @@ const long dhtInterval = 10000;  // her 10 saniyede dht'den veri alacak
 
 // e-posta gönderim zamanını tutar
 unsigned long previousEmailMillis = 0;    
-const long emailInterval = 1800000;  // her 3 dakikada bir email gönderilecek
+const long emailInterval = 300000;  // 5 dakika = 300.000 ms
 
 // web sunucusu oluşturuldu ve port 80'de çalışacak
 AsyncWebServer server(80);
@@ -263,9 +263,10 @@ void loop(){
     sendDataToServer();
   }
 
-  // 3 dakikada bir e-posta gönderme
-  if (currentMillis - previousEmailMillis >= emailInterval) {
-    previousEmailMillis = currentMillis;
-    sendMail();
-  }
+    // Eğer sıcaklık >= 25 veya nem >= 55 ise ve 5 dakika geçtiyse e-posta gönder
+    if ((t >= 25.0 || h >= 55.0) && (currentMillis - previousEmailMillis >= emailInterval)) {
+      previousEmailMillis = currentMillis;
+      sendMail();
+}
+
 }
